@@ -1,0 +1,6 @@
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\bin\Debug\BitLockerGUI.exe.config
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\bin\Debug\BitLockerGUI.exe
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\bin\Debug\BitLockerGUI.pdb
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\obj\Debug\BitLockerGUI.csproj.CoreCompileInputs.cache
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\obj\Debug\BitLockerGUI.exe
+C:\Nevin\Learning\BitLockerGUI\BitLockerGUI\obj\Debug\BitLockerGUI.pdb

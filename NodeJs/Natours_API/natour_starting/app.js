@@ -1,88 +1,28 @@
-const fs = require('fs')
 const express = require('express');
+const morgan = require('morgan')
+
+const tourRouter = require('./routers/tourRoutes')
+const userRouter = require('./routers/userRoutes')
 
 const app = express()
+
+if(process.env.NODE_ENV === 'development'){
+    //using 3rd party middleware (morgan)
+    app.use(morgan('dev'))
+}
 app.use(express.json()) // middeleware -> is just a function which can modify incoming data
+app.use(express.static(`${__dirname}/public`))
+//creating own middleware
+app.use((req, res, next) => {
+    console.log('Hello from the middleware')
+    next() //always call next() in middleware else it will loop endlessly in the cycle
+})
 
-const tours =JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
-
-const getAllTours = (req, res) => {   //route handler
-    res.status(200).json({
-        status: 'success',
-        results: tours.length,
-        data: {
-            tours //from ES6 we dont have to mention key and value if they have same name, else it will be tours: tours
-        }
-    })
-}
-
-const getTourFromId = (req, res) => {   //route handler
-    const id = req.params.id * 1
-
-    if(id > tours.length)
-    {
-        return res.status(400).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        })
-    }
-    const tour = tours.find(el => el.id === id)
-    res.status(200).json({
-        status: 'success',
-        data: {
-            tour //from ES6 we dont have to mention key and value if they have same name, else it will be tours: tours
-        }
-    })
-}
-
-const createTour = (req, res) => {
-    console.log(req.body)
-    const newId = tours[tours.length - 1].id + 1
-    const newTour = Object.assign({id: newId}, req.body)
-
-    tours.push(newTour)
-
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
-        res.status(201).json({
-            status: 'success',
-            data: {
-                tour: newTour
-            }
-        })
-    })
-}
-
-const updateTour = (req, res) => {
-    const id = req.params.id * 1
-    if(id > tours.length){
-        return res.status(400).json({
-        status: 'fail',
-        message: 'Invalid ID'
-        })
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            tour: '<Update tour here...>'
-        }
-    })
-}
-
-const deleteTour =  (req, res) => {
-    const id = req.params.id * 1
-    if(id > tours.length){
-        return res.status(400).json({
-        status: 'fail',
-        message: 'Invalid ID'
-        })
-    }
-
-    res.status(204).json({
-        status: 'sucess',
-        data: null
-    })
-}
+//another own middleware
+app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString()
+    next()
+})
 
 //app.get('/api/v1/tours', getAllTours) //we are using the routes now
 //app.get('/api/v1/tours/:id', getTourFromId) //we are using the routes now
@@ -90,19 +30,7 @@ const deleteTour =  (req, res) => {
 //app.delete('/api/v1/tours/:id', deleteTour) //we are using the routes now
 //app.post('/api/v1/tours', createTour) //we are using the routes now
 
-app
-    .route('/api/v1/tours')
-    .get(getAllTours)
-    .post(createTour)
+app.use('/api/v1/tours', tourRouter)
+app.use('/api/v1/user', userRouter)
 
-
-app
-    .route('/api/v1/tours/:id')
-    .get(getTourFromId)
-    .patch(updateTour)
-    .delete(deleteTour)
-
-const port = 3000
-app.listen(port, () => {
-    console.log(`App running on port ${port}...`)
-})
+module.exports = app;

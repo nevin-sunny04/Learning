@@ -14,7 +14,7 @@ app.use(express.json()) // middeleware -> is just a function which can modify in
 app.use(express.static(`${__dirname}/public`))
 //creating own middleware
 app.use((req, res, next) => {
-    console.log('Hello from the middleware')
+    console.log('Hello from the middlewares')
     next() //always call next() in middleware else it will loop endlessly in the cycle
 })
 

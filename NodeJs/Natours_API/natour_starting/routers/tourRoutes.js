@@ -10,6 +10,16 @@ const router = express.Router()
 //add it to the post handler stack
 
 router
+    .route('/top-5-cheap')
+    .get(tourController.aliasTopTours, tourController.getAllTours) //incase we want to add a alias, we need to make use of a middleware to modify the query
+
+router.route('/tour-stats')
+    .get(tourController.getTourStats);
+
+router.route('/monthly-plan/:year')
+    .get(tourController.getMonthlyPlan);
+
+router
     .route('/')
     .get(tourController.getAllTours)
     .post(tourController.createTour)

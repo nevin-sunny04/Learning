@@ -51,9 +51,17 @@ const tourSchema = new mongoose.Schema({ //create a new schema, that is the data
     createdAt: {
         type: Date,
         default: Date.now()
+        //select = false; //so that it is never shown in the schema when requested by client. (Useful for hiding passwords)
     },
     startDates: [Date],
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 });
+
+tourSchema.virtual('durationWeeks').get(function() {
+    return this.durations / 7
+})
 
 const Tour = mongoose.model('Tour', tourSchema) // creating a model out of the shema, modelname should start with UPPERCASE
 
